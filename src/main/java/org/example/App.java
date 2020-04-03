@@ -5,9 +5,11 @@ import java.util.Scanner;
 
 public class App
 {
+
+
     public static void main( String[] args ) throws InterruptedException {
-        int sizeX = 16;
-        int sizeY=70;
+        int sizeX = 24;
+        int sizeY=60;
 
         landscape l = new landscape(sizeX,sizeY,true,true);
 
@@ -19,15 +21,20 @@ public class App
         driver drv = new driver(l.teePos.GetX(),l.teePos.GetY());
 
         l.addDisc(drv);
-
-        while(l.discs[0].GetPos().GetX()<l.dim_X && l.discs[0].GetPos().GetY()<l.dim_Y && l.discs[0].pos.isInPosition(l.basketPos.GetX(),l.basketPos.GetY())==false) {
+        l.printStaticDisplay();
+        while(l.isPositionValid(l.discs[0].pos)&& l.discs[0].pos.isInPosition(l.basketPos.GetX(),l.basketPos.GetY())==false) {
             l.printDisplay();
-            int curDiscX = drv.GetPos().GetX();
-            int curDiscY = drv.GetPos().GetY();
+
             drv.ThrowDisc(l.basketPos.GetX(),l.basketPos.GetY());
-            int newDiscX = drv.GetPos().GetX();
-            int newDiscY = drv.GetPos().GetY();
-            System.out.println(curDiscX+","+curDiscY+"  " + newDiscX +"," + newDiscY);
+
+            if(l.isPositionValid(drv.GetPos())==false){
+                System.out.println("You are OB. +1 Stroke");
+                while(l.isPositionValid(drv.GetPos())==false){
+                    drv.ThrowDisc(l.basketPos.GetX(),l.basketPos.GetY());
+                }
+            }
+
+//            System.out.println(curDiscX+","+curDiscY+"  " + newDiscX +"," + newDiscY);
             l.addDisc(drv);
             Thread.sleep(640);
           //  l.TraceThrow(curDiscX,curDiscY,newDiscX,newDiscY);

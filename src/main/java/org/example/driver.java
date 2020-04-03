@@ -26,6 +26,7 @@ public class driver extends disc{
 
 
         pos = new position(pos.GetX()+distX, pos.GetY()+distY);
+
         double throwLength = Math.round(Math.sqrt(Math.abs(distX)+Math.abs(distY)));
 
         if(pos.isInPosition(targetX,targetY)){
