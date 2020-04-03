@@ -13,14 +13,14 @@ public class driver extends disc{
     @Override
     public void ThrowDisc(int targetX, int targetY) {
         double dist=Math.sqrt(Math.pow(((double)pos.GetXDist(targetX)*1.0) ,2.0) + Math.pow(pos.GetYDist(targetY)*1.0,2));
-        if(dist<=3.0){
+        if(dist<=4.0){
             pos = new position(targetX,targetY);
             System.out.println("Nice layup, easy putt!");
             return;
         }
         Random r = new Random();
-        int distX = r.nextInt(flightNums.getSpd()/4)+flightNums.getGld()*2 - flightNums.getTrn()/2;
-        int distY = r.nextInt(flightNums.getSpd())+flightNums.getGld()*2 + flightNums.getFde()*2 - flightNums.getTrn();
+        int distX = r.nextInt(flightNums.getSpd()/3)+flightNums.getGld()*2 - flightNums.getTrn()/2;
+        int distY = r.nextInt(flightNums.getSpd())+flightNums.getGld()*3 + flightNums.getFde()*2 - flightNums.getTrn();
         if(pos.GetXDist(targetX)<0){distX *= -1;}
         if(pos.GetYDist(targetY)<0){distY *= -1;}
 
