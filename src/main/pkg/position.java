@@ -1,4 +1,4 @@
-package org.example;
+package pkg;
 
 public class position {
 
@@ -23,5 +23,8 @@ public class position {
     }
     public int GetYDist(int yy){
         return yy-y;
+    }
+    public double GetRealDist(position fromPos){
+        return Math.sqrt(Math.pow(GetX() - fromPos.GetX(),2) + Math.pow(GetY() - fromPos.GetY(),2));
     }
 }

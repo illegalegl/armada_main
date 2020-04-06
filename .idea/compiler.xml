@@ -9,8 +9,8 @@
         <module name="armada_main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="armada_main" target="1.7" />
+    <bytecodeTargetLevel target="13">
+      <module name="armada_main" target="1.13" />
     </bytecodeTargetLevel>
   </component>
 </project>

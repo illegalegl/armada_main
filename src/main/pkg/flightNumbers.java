@@ -1,4 +1,4 @@
-package org.example;
+package pkg;
 
 public class flightNumbers {
 
