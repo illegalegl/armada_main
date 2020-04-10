@@ -1,6 +1,7 @@
 package pkg;
 
 import java.util.ArrayList;
+import java.util.function.BiPredicate;
 
 public class printer {
     public static final String RESET = "\033[0m";  // Text Reset
@@ -13,14 +14,14 @@ public class printer {
     public static final String BLUE_BOLD_BRIGHT = "\033[1;94m";  // BLUE
     public static final String PURPLE_BOLD_BRIGHT = "\033[1;95m";// PURPLE
     public static final String CYAN_BOLD_BRIGHT = "\033[1;96m";  // CYAN
-    public static final String WHITE_BOLD_BRIGHT = "\033[1;97m"; // WHITE
+    public static final String WHITE_BOLD_BRIGHT = "\033[7;49;39m"; // WHITE
 
-    public String addPlayerDiscs(int i, int j, ArrayList<disc> discs){
+    public String addPlayerDiscs(int i, int j, ArrayList<Player> players){
         String[] playerColors = new String[]{RED_BOLD_BRIGHT,BLUE_BOLD_BRIGHT,GREEN_BOLD_BRIGHT,PURPLE_BOLD_BRIGHT};
         int k=0;
-        for(disc d : discs){
-            if(d!=null && d.GetPos().GetX()!=0 && d.GetPos().GetY()!=0) {
-                if (d.GetPos().isInPosition(i, j)) {
+        for(Player pl : players){
+            if(pl.currentDisc!=null && pl.GetPos().GetX()!=0 && pl.GetPos().GetY()!=0) {
+                if (pl.GetPos().isInPosition(i, j)) {
                     return playerColors[k];
                 }
             }
@@ -30,10 +31,34 @@ public class printer {
         return "";
     }
 
-    public void printMap(char[][] display, position basketPos, ArrayList<disc> discs){
+    public void AreDiscsOverlapping(char[][] display,ArrayList<Player> players){
+
+        ArrayList<disc> discs = new ArrayList<disc>();
+        players.forEach(x->discs.add(x.currentDisc));
+
+        BiPredicate<disc,disc> predicate = (item1, item2) -> item1.pos.GetX()==item2.pos.GetX()
+                && item1.pos.GetY()==item2.pos.GetY();
+
+        boolean overlapping = false;
+
+        for(int i=0;i<discs.size();i++){
+            for(int j=0;j<discs.size();j++){
+                if(i!=j && predicate.test(discs.get(i),discs.get(j))==true){
+                    display[discs.get(i).GetPos().GetX()][discs.get(i).GetPos().GetY()] = '%';
+                    overlapping = true;
+                }
+                if(overlapping){break;}
+            }
+            if(overlapping){break;}
+        }
+
+    }
+
+    public void printMap(char[][] display, position basketPos, ArrayList<Player> players){
         int dim_X = display.length;
         int dim_Y = display[0].length;
         String color = "";
+        AreDiscsOverlapping(display,players);
         for(int i=0; i< dim_X; i++){
             for(int j=0; j<dim_Y;j++){
                 color = "";
@@ -42,7 +67,7 @@ public class printer {
                     display[i][j]='$';
                 }
 
-                color = addPlayerDiscs(i,j,discs);
+                color = addPlayerDiscs(i,j,players);
 
                 switch(display[i][j]){
                     case('|'):
@@ -68,6 +93,9 @@ public class printer {
                     case(','):
                         color = CYAN_BOLD_BRIGHT;
                         break;
+                    case('%'):
+                        color= WHITE_BOLD_BRIGHT;
+                        break;
                 }
 
                 System.out.print( color + display[i][j] + RESET);
@@ -77,7 +105,7 @@ public class printer {
         }
     }
 
-    public void setStaticItems(char[][] display, ArrayList<position> treeGroves,ArrayList<position> pondHazards, ArrayList<disc> ds, position basketPos, position teePos){
+    public void setStaticItems(char[][] display, ArrayList<position> treeGroves,ArrayList<position> pondHazards, ArrayList<Player> players, position basketPos, position teePos){
 
         int dim_X = display.length;
         int dim_Y = display[0].length;
@@ -120,8 +148,8 @@ public class printer {
                 c = '&';
                 isOnBasket = true;
             }
-            for(disc d : ds) {
-                if (d.GetPos().isInPosition(i, j)) {
+            for(Player pl: players) {
+                if (pl.GetPos().isInPosition(i, j)) {
                     c = '@';
                     isOnDisc = true;
                 }

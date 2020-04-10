@@ -14,7 +14,7 @@ public class landscape {
     private int numWaters = 0;
     ArrayList<position> pondHazards;
     char[][] display;
-    ArrayList<disc> discs;
+    ArrayList<Player> players;
 
     public position basketPos = new position(dim_X, dim_Y);
     public position teePos = new position(dim_X, dim_Y);
@@ -24,7 +24,7 @@ public class landscape {
         SetY(size_Y);
         hasTrees = containsTrees;
         hasWater = containsWater;
-        discs = new ArrayList<disc>();
+        players = new ArrayList<Player>();
         display = new char[GetX()][GetY()];
         treeGroves = new ArrayList<>();
         pondHazards = new ArrayList<>();
@@ -120,30 +120,37 @@ public class landscape {
         }
     }
 
-    public void addDisc(disc d){
-            discs.add(d);
+    public void addPlayer(Player p){
+        players.add(p);
     }
 
-    public void modifyDisc(disc d) {
+    public void modifyPlayerLocation(Player p) {
 
-        int x = d.GetPos().GetX();
-        int y = d.GetPos().GetY();
-        if(x>0 && x< this.GetX()-1 && y>0 && y< this.GetY()-1) {
+        int x = p.GetPos().GetX();
+        int y = p.GetPos().GetY();
+        int lastx = p.GetLastPos().GetX();
+        int lasty = p.GetLastPos().GetY();
+  //      System.out.println("x,y: "+ x + "," + y + ", lastx,lasty: " + lastx + "," + lasty);
+        if(isPositionValid(p.GetPos())) {
 
-            if(discs.stream().anyMatch(dd -> dd.GetName() == d.GetName())){
+            if(players.stream().anyMatch(pp -> pp.GetName() == pp.GetName())){
                 display[x][y] = '@';
             }
 
         }else{
-            System.out.println("Your disc landed out of bounds " + d.GetName() + ", please rethrow!");
+            if(isPositionValid(p.GetLastPos())) {
+                display[lastx][lasty] = '@';
+            }else
+                System.out.println("Your disc landed out of bounds " + p.GetName() + ", please rethrow!");
         }
-        x = d.GetLastPos().GetX();
-        y = d.GetLastPos().GetY();
-        if (display[x][y] == '#')
-            display[x][y] = '=';
+
+        if (display[lastx][lasty] == '#')
+            display[lastx][lasty] = '=';
         else
-            display[x][y] = ' ';
+            display[lastx][lasty] = ' ';
     }
+
+
 
     public int GetX() {
         return dim_X;

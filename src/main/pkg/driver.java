@@ -13,6 +13,15 @@ public class driver extends disc{
         flightNums = new flightNumbers(10,6,3,1,2);
     }
 
+    public driver(int x, int y, String name, int spd, int str, int trn, int gld, int fde){
+        this.SetName(name);
+        pos = new position(0,0);
+        this.SetPos(new position(x,y));
+
+
+        flightNums = new flightNumbers(spd,str,trn,gld,fde);
+    }
+
     public double CalculatePuttDistance(int targetX, int targetY){
         position p = this.GetPos();
         return Math.sqrt(Math.pow(((double)p.GetXDist(targetX)*1.0) ,2.0) + Math.pow(p.GetYDist(targetY)*1.0,2));
